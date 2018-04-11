@@ -1,5 +1,6 @@
 package org.prebid.server.auction;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,9 +35,10 @@ import org.prebid.server.cookie.UidsCookie;
 import org.prebid.server.exception.PreBidException;
 import org.prebid.server.execution.Timeout;
 import org.prebid.server.execution.TimeoutFactory;
-import org.prebid.server.metric.AdapterMetrics;
+import org.prebid.server.metric.CounterType;
 import org.prebid.server.metric.MetricName;
-import org.prebid.server.metric.Metrics;
+import org.prebid.server.metric.dropwizard.AdapterMetrics;
+import org.prebid.server.metric.prebid.ExchangeServiceMetrics;
 import org.prebid.server.proto.openrtb.ext.ExtPrebid;
 import org.prebid.server.proto.openrtb.ext.request.ExtBidRequest;
 import org.prebid.server.proto.openrtb.ext.request.ExtRequestPrebid;
@@ -92,9 +94,7 @@ public class ExchangeServiceTest extends VertxTest {
     @Mock
     private CacheService cacheService;
     @Mock
-    private Metrics metrics;
-    @Mock
-    private AdapterMetrics adapterMetrics;
+    private org.prebid.server.metric.Metrics metrics;
     @Mock
     private UidsCookie uidsCookie;
     @Mock
@@ -104,14 +104,22 @@ public class ExchangeServiceTest extends VertxTest {
     @Mock
     private AdServerService adServerService;
 
+
     private Clock clock;
-
-    private ExchangeService exchangeService;
-
     private Timeout timeout;
+    private ExchangeService exchangeService;
+    private ExchangeServiceMetrics serviceMetrics;
+    private static MetricRegistry registry = new MetricRegistry();
+    private AdapterMetrics adapterMetrics;
+
 
     @Before
     public void setUp() {
+        adapterMetrics = spy(new AdapterMetrics(registry, CounterType.flushingCounter, "nexus"));
+        given(metrics.forAdapter(anyString())).willReturn(adapterMetrics);
+
+        serviceMetrics = new ExchangeServiceMetrics(metrics, bidderCatalog);
+
         given(bidderCatalog.isValidName(anyString())).willReturn(true);
         given(bidderCatalog.isActive(anyString())).willReturn(true);
         given(bidderCatalog.bidderRequesterByName(anyString())).willReturn(bidderRequester);
@@ -119,7 +127,6 @@ public class ExchangeServiceTest extends VertxTest {
 
         given(responseBidValidator.validate(any())).willReturn(ValidationResult.success());
         given(usersyncer.cookieFamilyName()).willReturn("cookieFamily");
-        given(metrics.forAdapter(anyString())).willReturn(adapterMetrics);
 
         given(adServerService.buildAdServerKeyValues(any(), any()))
                 .willReturn(Future.succeededFuture(Collections.EMPTY_MAP));
@@ -127,13 +134,13 @@ public class ExchangeServiceTest extends VertxTest {
         clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
         timeout = new TimeoutFactory(clock).create(500);
 
-        exchangeService = new ExchangeService(bidderCatalog, responseBidValidator, adServerService, cacheService, metrics, clock, 0);
+        exchangeService = new ExchangeService(bidderCatalog, responseBidValidator, adServerService, cacheService, serviceMetrics, clock, 0);
     }
 
     @Test
     public void creationShouldFailOnNegativeExpectedCacheTime() {
         assertThatIllegalArgumentException().isThrownBy(
-                () -> new ExchangeService(bidderCatalog, responseBidValidator, adServerService, cacheService, metrics, clock, -1));
+                () -> new ExchangeService(bidderCatalog, responseBidValidator, adServerService, cacheService, serviceMetrics, clock, -1));
     }
 
     @Test
@@ -974,7 +981,7 @@ public class ExchangeServiceTest extends VertxTest {
     public void shouldPassReducedGlobalTimeoutToConnectorAndOriginalToCacheServiceIfCachingIsRequested() {
         // given
         exchangeService = new ExchangeService(bidderCatalog, responseBidValidator, adServerService, cacheService,
-                metrics, clock, 100);
+                serviceMetrics, clock, 100);
 
         givenHttpConnector(givenSeatBid(singletonList(
                 givenBid(Bid.builder().id("bidId1").impid("impId1").price(BigDecimal.valueOf(5.67)).build()))));
