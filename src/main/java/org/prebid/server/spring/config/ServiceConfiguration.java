@@ -134,9 +134,9 @@ public class ServiceConfiguration {
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     ExchangeService exchangeService(
-            @Value("${auction.expected-cache-time-ms}") long expectedCacheTimeMs,
-            BidderCatalog bidderCatalog, ResponseBidValidator responseBidValidator,
-            AdServerService adServerService,CacheService cacheService, ExchangeServiceMetrics exchangeServiceMetrics, Clock clock) {
+            @Value("${auction.expected-cache-time-ms}") long expectedCacheTimeMs, BidderCatalog bidderCatalog,
+            ResponseBidValidator responseBidValidator, AdServerService adServerService, CacheService cacheService,
+            ExchangeServiceMetrics exchangeServiceMetrics, Clock clock) {
 
         return new ExchangeService(bidderCatalog, responseBidValidator, adServerService, cacheService,
                 exchangeServiceMetrics, clock, expectedCacheTimeMs);

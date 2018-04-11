@@ -559,7 +559,7 @@ public class AuctionHandlerTest extends VertxTest {
     @Test
     public void shouldIncrementSafariAndNoCookieMetrics() {
         // given
-        givenPreBidRequestContext(identity(), builder -> builder.noLiveUids(true));
+        PreBidRequestContext preBidRequestContext = givenPreBidRequestContext(identity(), builder -> builder.noLiveUids(true));
 
         httpRequest.headers().add(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) " +
                 "AppleWebKit/601.7.7 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.7");
@@ -568,6 +568,9 @@ public class AuctionHandlerTest extends VertxTest {
         auctionHandler.handle(routingContext);
 
         // then
+        verify(handlerMetrics).updateRequestMetrics(routingContext, auctionHandler);
+        verify(handlerMetrics).updateAppAndNoCookieMetrics(routingContext, auctionHandler, preBidRequestContext, true,
+                false);
         verify(metrics).incCounter(eq(MetricName.safari_requests));
         verify(metrics).incCounter(eq(MetricName.no_cookie_requests));
         verify(metrics).incCounter(eq(MetricName.safari_no_cookie_requests));
@@ -615,6 +618,7 @@ public class AuctionHandlerTest extends VertxTest {
         auctionHandler.handle(routingContext);
 
         // then
+        verify(handlerMetrics).bidResponseOrError(any());
         verify(adapterMetrics).incCounter(eq(MetricName.error_requests));
         verify(accountAdapterMetrics).incCounter(eq(MetricName.error_requests));
     }

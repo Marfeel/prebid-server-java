@@ -69,10 +69,9 @@ public class ExchangeService {
     private long expectedCacheTime;
     private final ExchangeServiceMetrics serviceMetrics;
 
-    public ExchangeService(BidderCatalog bidderCatalog,
-                           ResponseBidValidator responseBidValidator, CacheService cacheService,
-                           AdServerService adServerService, ExchangeServiceMetrics serviceMetrics,
-                           Clock clock, long expectedCacheTime) {
+    public ExchangeService(BidderCatalog bidderCatalog, ResponseBidValidator responseBidValidator,
+                           AdServerService adServerService, CacheService cacheService,
+                           ExchangeServiceMetrics serviceMetrics, Clock clock, long expectedCacheTime) {
         this.bidderCatalog = Objects.requireNonNull(bidderCatalog);
         this.responseBidValidator = Objects.requireNonNull(responseBidValidator);
         this.adServerService = Objects.requireNonNull(adServerService);
@@ -117,15 +116,13 @@ public class ExchangeService {
 
         final long startTime = clock.millis();
 
-        // retrieve adServerService key values
-        Future<Map<String, String>> adServerKeyValues = Future.future();
-
-        // send all the requests to the bidders and gathers results
+        // prepare the future to send all the requests to the bidders and gathers results
         final CompositeFuture bidderResults = CompositeFuture.join(bidderRequests.stream()
                 .map(bidderRequest -> requestBids(bidderRequest, startTime,
                         auctionTimeout(timeout, shouldCacheBids), aliases))
                 .collect(Collectors.toList()));
 
+        // request all the bidders and also retrieve adServerService key values
         CompositeFuture all = CompositeFuture.all(bidderResults,
                 adServerService.buildAdServerKeyValues(context, bidRequest));
 

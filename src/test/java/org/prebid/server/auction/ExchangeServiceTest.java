@@ -104,7 +104,6 @@ public class ExchangeServiceTest extends VertxTest {
     @Mock
     private AdServerService adServerService;
 
-
     private Clock clock;
     private Timeout timeout;
     private ExchangeService exchangeService;
