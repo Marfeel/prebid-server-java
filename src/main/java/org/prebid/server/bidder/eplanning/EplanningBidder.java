@@ -2,10 +2,7 @@ package org.prebid.server.bidder.eplanning;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-<<<<<<< HEAD
-=======
 import com.iab.openrtb.request.App;
->>>>>>> c2ac4547... fix: avoid eplanning bids when 300x250 is not requested
 import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.request.Device;
 import com.iab.openrtb.request.Imp;
