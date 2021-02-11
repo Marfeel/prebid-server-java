@@ -64,8 +64,71 @@ gdpr:
   default-value: 1
   eea-countries: at,bg,be,cy,cz,dk,ee,fi,fr,de,gr,hu,ie,it,lv,lt,lu,mt,nl,pl,pt,ro,sk,si,es,se,gb,is,no,li,ai,aw,pt,bm,aq,io,vg,ic,ky,fk,re,mw,gp,gf,yt,pf,tf,gl,pt,ms,an,bq,cw,sx,nc,pn,sh,pm,gs,tc,uk,wf
   vendorlist:
-    http-endpoint-template: https://vendorlist.consensu.org/v-{VERSION}/vendorlist.json
-    http-default-timeout-ms: 2000
+    v1:
+      http-endpoint-template: https://vendorlist.consensu.org/v-{VERSION}/vendorlist.json
+      http-default-timeout-ms: 2000
+      refresh-missing-list-period-ms: 3600000
+    v2:
+      http-endpoint-template: https://vendor-list.consensu.org/v2/archives/vendor-list-v{VERSION}.json
+      http-default-timeout-ms: 2000
+      refresh-missing-list-period-ms: 3600000
+  purposes:
+    p1:
+      enforce-purpose: full
+      enforce-vendors: true
+    p2:
+      enforce-purpose: full
+      enforce-vendors: true
+    p3:
+      enforce-purpose: full
+      enforce-vendors: true
+    p4:
+      enforce-purpose: full
+      enforce-vendors: true
+    p5:
+      enforce-purpose: full
+      enforce-vendors: true
+    p6:
+      enforce-purpose: full
+      enforce-vendors: true
+    p7:
+      enforce-purpose: full
+      enforce-vendors: true
+    p8:
+      enforce-purpose: full
+      enforce-vendors: true
+    p9:
+      enforce-purpose: full
+      enforce-vendors: true
+    p10:
+      enforce-purpose: full
+      enforce-vendors: true
+  special-features:
+    sf1:
+      enforce: true
+    sf2:
+      enforce: true
+  purpose-one-treatment-interpretation: ignore
+ccpa:
+  enforce: true
+geolocation:
+  enabled: false
+  type: maxmind
+  maxmind:
+    remote-file-syncer:
+      download-url: https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
+      save-filepath: /var/tmp/prebid/GeoLite2-City.tar.gz
+      tmp-filepath: /var/tmp/prebid/tmp/GeoLite2-City.tar.gz
+      retry-count: 3
+      retry-interval-ms: 3000
+      timeout-ms: 300000
+      update-interval-ms: 0
+      http-client:
+        connect-timeout-ms: 2500
+        max-redirects: 3
+health-check:
+  database:
+    enabled: false
   geolocation:
     enabled: true
     maxmind:
