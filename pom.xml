@@ -708,11 +708,11 @@
     <distributionManagement>
         <repository>
             <id>marfeel-private</id>
-            <url>http://repositories.marfeel.com:60081/nexus/content/repositories/marfeel_private</url>
+            <url>https://repositories-proxy.mrf.io/nexus/content/repositories/marfeel_private</url>
         </repository>
         <snapshotRepository>
             <id>marfeel-snapshot-private</id>
-            <url>http://repositories.marfeel.com:60081/nexus/content/repositories/marfeel_snapshot_private</url>
+            <url>https://repositories-proxy.mrf.io/nexus/content/repositories/marfeel_snapshot_private</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
