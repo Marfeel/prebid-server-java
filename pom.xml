@@ -24,7 +24,7 @@
         <repository>
             <id>marfeel-private</id>
             <name>Marfeel Maven Release Repository</name>
-            <url>http://repositories.marfeel.com:60081/nexus/content/repositories/marfeel_private/</url>
+            <url>https://repositories-proxy.mrf.io/nexus/content/repositories/marfeel_private/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -34,7 +34,7 @@
         </repository>
         <repository>
             <id>marfeel-snapshot-private</id>
-            <url>http://repositories.marfeel.com:60081/nexus/content/repositories/marfeel_snapshot_private/</url>
+            <url>https://repositories-proxy.mrf.io/nexus/content/repositories/marfeel_snapshot_private/</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
