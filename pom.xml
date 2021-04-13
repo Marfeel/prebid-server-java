@@ -608,7 +608,8 @@
                                     <goal>check</goal>
                                 </goals>
                                 <configuration>
-                                    <effort>Max</effort>
+                                    <effort>min</effort>
+                                    <onlyAnalyze>com.marfeel.*</onlyAnalyze>
                                 </configuration>
                             </execution>
                         </executions>
@@ -621,7 +622,8 @@
                             </dependency>
                         </dependencies>
                         <configuration>
-                            <effort>Max</effort>
+                            <effort>min</effort>
+                            <onlyAnalyze>com.marfeel.*</onlyAnalyze>
                         </configuration>
                     </plugin>
                 </plugins>
