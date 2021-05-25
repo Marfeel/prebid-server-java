@@ -1,12 +1,8 @@
 package org.prebid.server.spring.config.bidder.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatchException;
-import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import org.apache.commons.lang3.StringUtils;
 import org.prebid.server.bidder.Bidder;
 import org.prebid.server.bidder.BidderDeps;
@@ -164,16 +160,7 @@ public class BidderDepsAssembler<CFG extends BidderConfigurationProperties> {
         return (CFG) configurationBinder.bind(StringUtils.EMPTY, (Class) targetClass).get();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     private CFG mergeConfigurations(CFG aliasConfiguration, CFG coreConfiguration) {
-        try {
-            final JsonNode mergedNode = JsonMergePatch
-                    .fromJson(MAPPER.valueToTree(aliasConfiguration))
-                    .apply(MAPPER.valueToTree(coreConfiguration));
-
-            return (CFG) MAPPER.treeToValue(mergedNode, (Class) coreConfiguration.getSelfClass());
-        } catch (JsonPatchException | JsonProcessingException e) {
-            throw new IllegalArgumentException("Exception occurred while merging alias configuration", e);
-        }
+        return coreConfiguration;
     }
 }
