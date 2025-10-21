@@ -1,4 +1,4 @@
-FROM --platform=amd64 tomcat:8.5-jdk8-temurin-jammy
+FROM eclipse-temurin:8u402-b06-jdk-jammy
 
 ENV VERTICLE_FILE prebid-server.jar
 
