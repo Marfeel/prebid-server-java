@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk
+FROM eclipse-temurin:8u462-b08-jdk-jammy
 
 ENV VERTICLE_FILE prebid-server.jar
 
